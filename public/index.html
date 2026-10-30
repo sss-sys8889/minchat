@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17172b"><title>Minchat | چت تصویری</title>
+<style>
+:root{
+ --bg:#090817;--bg2:#17102c;--panel:rgba(26,19,48,.78);--panel2:rgba(35,25,62,.88);
+ --line:rgba(193,155,255,.25);--accent:#b56cff;--accent2:#ff5fcf;--glow:rgba(181,108,255,.38);
+ --text:#fffaff;--muted:#c9bddb;--video:#100d20;--good:#65f5d0;
+ color-scheme:dark
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+ background:radial-gradient(ellipse at 15% 0%,color-mix(in srgb,var(--accent) 28%,transparent),transparent 42%),
+ radial-gradient(ellipse at 90% 20%,color-mix(in srgb,var(--accent2) 18%,transparent),transparent 38%),
+ linear-gradient(145deg,var(--bg),var(--bg2));background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+main{position:relative;max-width:850px;margin:auto;padding:22px 16px 34px}
+.top{display:flex;align-items:center;gap:13px;margin:4px 0 18px}
+.logo{width:58px;height:58px;flex:0 0 58px;border-radius:19px;display:grid;place-items:center;font-size:29px;font-weight:900;
+ background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 28px var(--glow),inset 0 1px 0 #ffffff70}
+.brand{font-size:30px;font-weight:900;letter-spacing:.3px;text-shadow:0 0 20px var(--glow)}
+.tag,.fine,.foot{color:var(--muted);font-size:12px;line-height:1.9}
+.pill{margin-right:auto;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--text);font-size:11px;background:#ffffff0b;backdrop-filter:blur(12px)}
+.creator{border:1px solid var(--line);background:linear-gradient(100deg,color-mix(in srgb,var(--accent) 20%,transparent),color-mix(in srgb,var(--accent2) 12%,transparent));
+ border-radius:16px;padding:12px 15px;margin-bottom:14px;font-size:12px;color:var(--text);box-shadow:0 8px 28px #0002}
+.panel{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:26px;padding:18px;
+ box-shadow:0 18px 55px #0005,0 0 34px var(--glow);backdrop-filter:blur(18px)}
+.videos{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.video-wrap{position:relative;aspect-ratio:4/5;min-height:210px;background:linear-gradient(145deg,var(--video),color-mix(in srgb,var(--accent) 12%,var(--video)));
+ border:1px solid var(--line);border-radius:20px;overflow:hidden;display:grid;place-items:center;color:var(--muted);text-align:center;padding:8px;
+ box-shadow:inset 0 0 35px #0005}
+.video-wrap:after{content:"";position:absolute;inset:0;border:1px solid #ffffff0b;border-radius:inherit;pointer-events:none}
+.video-wrap video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.video-wrap span{font-size:13px;z-index:1;background:#090817b8;border:1px solid #ffffff20;border-radius:12px;padding:10px 12px;backdrop-filter:blur(8px)}
+.label{position:absolute;bottom:10px;right:10px;z-index:2;background:#090817c9;border:1px solid #ffffff24;padding:6px 10px;border-radius:999px;font-size:11px;backdrop-filter:blur(8px)}
+.status{background:color-mix(in srgb,var(--accent) 10%,#090817);border:1px solid var(--line);border-radius:15px;padding:13px 14px;color:var(--text);font-size:13px;line-height:1.8;margin-top:14px;min-height:50px}
+.checks{margin:16px 0;display:grid;gap:10px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.8;background:#ffffff08;border:1px solid #ffffff0d;padding:9px 11px;border-radius:12px}
+.check input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+button{border:1px solid var(--line);border-radius:15px;padding:14px 12px;min-height:50px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;color:var(--text);
+ background:linear-gradient(145deg,#ffffff17,#ffffff08);transition:transform .18s,box-shadow .18s,border-color .18s}
+button:active{transform:scale(.98)}
+button:hover:not(:disabled){border-color:var(--accent);box-shadow:0 0 20px var(--glow);transform:translateY(-1px)}
+button.primary{border:0;background:linear-gradient(110deg,var(--accent),var(--accent2));box-shadow:0 8px 24px var(--glow);color:#fff}
+button:disabled{opacity:.4;cursor:not-allowed;filter:saturate(.4)}
+.theme-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:#ffffff08}
+.theme-box label{font-size:12px;color:var(--muted);font-weight:700}
+#themeSelect{flex:1;min-width:170px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:13px;outline:none}
+.theme-dots{display:flex;gap:6px}
+.theme-dot{width:14px;height:14px;border-radius:50%;border:1px solid #ffffff70;box-shadow:0 0 9px currentColor}
+.fine{font-size:11px;margin-top:14px}
+.foot{text-align:center;margin-top:18px;font-size:11px}
+.hidden{display:none!important}
+@media(max-width:560px){
+ main{padding:13px 11px 26px}.top{gap:10px}.logo{width:49px;height:49px;flex-basis:49px;border-radius:16px;font-size:24px}
+ .brand{font-size:25px}.panel{padding:12px;border-radius:21px}.videos{gap:8px}.video-wrap{aspect-ratio:3/4;min-height:170px;border-radius:15px}
+ .video-wrap span{font-size:11px;padding:7px}.label{font-size:10px;right:7px;bottom:7px}
+ .buttons{gap:8px}button{font-size:12px;padding:12px 7px;min-height:47px}.creator{font-size:11px}
+}
+</style></head>
+<body><main>
+<header class="top"><div class="logo">◉</div><div><div class="brand">Minchat</div><div class="tag">چت تصویری ساده و سریع</div></div><div class="pill">نسخه آزمایشی</div></header>
+<div class="creator">⭐ سازنده برنامه: عضو ثابت Minchat <span id="creatorState">(حساب سازنده در این نسخه نمایشی است)</span></div>
+<div class="theme-box">
+ <label for="themeSelect">🎨 انتخاب تم / Theme</label>
+ <select id="themeSelect" aria-label="انتخاب تم">
+  <option value="purple">بنفش نئونی · Purple Neon</option>
+  <option value="blackgold">مشکی و طلایی · Black & Gold</option>
+  <option value="silver">سفید و نقره‌ای · White & Silver</option>
+  <option value="pink">صورتی و رزگلد · Pink & Rose Gold</option>
+  <option value="blue">آبی و سرمه‌ای · Blue & Navy</option>
+  <option value="emerald">زمردی و مشکی · Emerald & Black</option>
+ </select>
+ <div class="theme-dots" aria-hidden="true"><i class="theme-dot" style="color:#b56cff;background:#b56cff"></i><i class="theme-dot" style="color:#d7ad57;background:#d7ad57"></i><i class="theme-dot" style="color:#dce5f4;background:#dce5f4"></i><i class="theme-dot" style="color:#ff83bb;background:#ff83bb"></i><i class="theme-dot" style="color:#55aaff;background:#55aaff"></i><i class="theme-dot" style="color:#39d69b;background:#39d69b"></i></div>
+</div>
+<section class="panel">
+<div class="videos">
+<div class="video-wrap"><video id="remoteVideo" autoplay playsinline></video><span id="remotePlaceholder">برای شروع تماس آماده‌ایم</span><div class="label">طرف مقابل</div></div>
+<div class="video-wrap"><video id="localVideo" autoplay muted playsinline></video><span id="localPlaceholder">تصویر شما</span><div class="label">شما</div></div>
+</div>
+<div id="status" class="status" role="status" aria-live="polite">اول ثبت‌نام کن، بعد «شروع تماس تصویری» را بزن.</div>
+<div class="checks">
+<label class="check"><input type="checkbox" id="womanSelf"><span>من زن هستم و این مورد را خودم تأیید می‌کنم.</span></label>
+<label class="check"><input type="checkbox" id="adult"><span>۱۸ سال یا بیشتر دارم.</span></label>
+<label class="check"><input type="checkbox" id="privacy"><span>با استفاده از دوربین و میکروفون برای تماس زنده موافقم.</span></label>
+</div>
+<div class="buttons">
+<button id="registerBtn" class="primary">ثبت‌نام</button>
+<button id="callBtn" class="primary" disabled>شروع تماس تصویری</button>
+<button id="cameraBtn" disabled>تغییر دوربین گوشی</button>
+<button id="prevBtn" disabled>قبلی</button>
+<button id="nextBtn" disabled>بعدی</button>
+</div>
+<p class="fine">همه کشورها در جست‌وجو هستند و هدف، یافتن کاربران زن است. جنسیت با تأیید خود کاربر ثبت می‌شود؛ این نسخه حساب دائمی ندارد. با دکمه «تغییر دوربین گوشی» می‌توانی بین دوربین جلو و پشت جابه‌جا شوی؛ طرف مقابل دوربین انتخابی تو را می‌بیند. هر طرف کنترل دوربین گوشی خودش را دارد. برای تماس واقعی باید سایت روی HTTPS اجرا شود و کاربر دیگری هم آنلاین باشد.</p>
+</section><div class="foot">Minchat · صدا و تصویر ضبط یا در این سرور ذخیره نمی‌شوند.</div>
+</main>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(() => {
+ const $=id=>document.getElementById(id), socket=io({autoConnect:false});
+ let localStream=null,pc=null,peerId=null,registered=false,queued=false,active=false,cameraEnabled=true,facingMode='user';
+ let history=[],historyIndex=-1,iceServers=[{urls:'stun:stun.l.google.com:19302'}];
+ const status=m=>$('status').textContent=m;
+ function placeholders(){ $('localPlaceholder').classList.toggle('hidden',!!localStream); $('remotePlaceholder').classList.toggle('hidden',!!$('remoteVideo').srcObject); }
+ function closePeer(){if(pc){pc.ontrack=pc.onicecandidate=null;pc.close();pc=null}$('remoteVideo').srcObject=null;peerId=null;active=false;placeholders();$('prevBtn').disabled=historyIndex<=0;$('nextBtn').disabled=!registered;}
+ function signal(data){if(peerId)socket.emit('signal',{to:peerId,data});}
+ function makePC(){pc=new RTCPeerConnection({iceServers});localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));pc.ontrack=e=>{$('remoteVideo').srcObject=e.streams[0];placeholders()};pc.onicecandidate=e=>{if(e.candidate)signal({candidate:e.candidate})};pc.onconnectionstatechange=()=>{if(pc&&['failed','disconnected'].includes(pc.connectionState))status('اتصال ناپایدار شد؛ «بعدی» را امتحان کن.')}}
+ async function register(){if(!navigator.mediaDevices?.getUserMedia){status('مرورگر شما دسترسی به دوربین را پشتیبانی نمی‌کند؛ از مرورگر به‌روز و HTTPS استفاده کن.');return}if(!$('womanSelf').checked||!$('adult').checked||!$('privacy').checked){status('لطفاً سه تأیید زیر تصویر را علامت بزن.');return}if(!window.isSecureContext&&location.hostname!=='localhost'){status('برای دسترسی به دوربین، سایت باید با HTTPS باز شود.');return}$('registerBtn').disabled=true;try{localStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facingMode}},audio:true});$('localVideo').srcObject=localStream;placeholders();await new Promise(r=>{if($('localVideo').readyState>=2)r();else $('localVideo').onloadedmetadata=r});let faceOk=false;if('FaceDetector'in window){try{const f=await(new FaceDetector({fastMode:true,maxDetectedFaces:3})).detect($('localVideo'));faceOk=!!f&&f.length===1}catch{}}else{faceOk=confirm('این مرورگر تشخیص خودکار چهره را پشتیبانی نمی‌کند. آیا فقط چهره خودت در تصویر دیده می‌شود؟')}if(!faceOk){localStream.getTracks().forEach(t=>t.stop());localStream=null;$('localVideo').srcObject=null;placeholders();status('باید فقط یک چهره در تصویر باشد. نور و زاویه را بررسی و دوباره ثبت‌نام کن.');$('registerBtn').disabled=false;return}try{const cfg=await fetch('/ice-config',{cache:'no-store'});if(cfg.ok){const data=await cfg.json();if(Array.isArray(data.iceServers)&&data.iceServers.length)iceServers=data.iceServers}}catch{}registered=true;socket.connect();$('callBtn').disabled=false;$('nextBtn').disabled=false;$('cameraBtn').disabled=false;status('ثبت‌نام آزمایشی انجام شد. حالا «شروع تماس تصویری» را بزن.');$('creatorState').textContent='(حساب ثابت نمایشی؛ سازنده فقط هنگام آنلاین‌بودن می‌تواند تماس بگیرد)';}catch(e){if(localStream)localStream.getTracks().forEach(t=>t.stop());localStream=null;$('localVideo').srcObject=null;placeholders();status('دسترسی دوربین یا میکروفون ممکن نشد. مجوزها و HTTPS را بررسی کن.');$('registerBtn').disabled=false}}
+ async function switchCamera(){
+  if(!registered||!localStream){status('اول ثبت‌نام کن و اجازه دوربین بده.');return}
+  if(!navigator.mediaDevices?.getUserMedia){status('این مرورگر امکان دسترسی به دوربین را ندارد.');return}
+  const nextFacing=facingMode==='user'?'environment':'user';
+  const oldTrack=localStream.getVideoTracks()[0];
+  try{
+   // Some Android phones cannot open front and rear cameras simultaneously.
+   if(oldTrack){oldTrack.stop();localStream.removeTrack(oldTrack)}
+   let fresh;
+   try{fresh=await navigator.mediaDevices.getUserMedia({video:{facingMode:{exact:nextFacing}},audio:false})}
+   catch{fresh=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:nextFacing}},audio:false})}
+   const newTrack=fresh.getVideoTracks()[0];
+   if(!newTrack)throw new Error('No video track');
+   if(pc){const sender=pc.getSenders().find(s=>s.track&&s.track.kind==='video');if(sender)await sender.replaceTrack(newTrack)}
+   localStream.addTrack(newTrack);$('localVideo').srcObject=localStream;facingMode=nextFacing;
+   status(facingMode==='environment'?'دوربین پشت فعال شد؛ طرف مقابل تصویر آن را می‌بیند.':'دوربین جلو فعال شد؛ طرف مقابل تصویر آن را می‌بیند.');
+  }catch(e){
+   // Attempt to recover the original camera if switching failed.
+   try{const fallback=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facingMode}},audio:false});const t=fallback.getVideoTracks()[0];if(t){localStream.addTrack(t);$('localVideo').srcObject=localStream;if(pc){const sender=pc.getSenders().find(s=>s.track&&s.track.kind==='video');if(sender)await sender.replaceTrack(t)}}}catch{}
+   status('تغییر دوربین ممکن نشد؛ مجوز دوربین یا پشتیبانی گوشی را بررسی کن.');
+  }
+ }
+ function findPartner(){if(!registered){status('اول ثبت‌نام کن.');return}closePeer();queued=true;socket.emit('find-partner',{country:'OTHER',gender:'woman',targetCountry:'ANY',targetGender:'woman'});status('در حال جست‌وجوی کاربر زن آنلاین از هر کشوری…');$('callBtn').disabled=true;$('nextBtn').disabled=true}
+ function stopAll(){if(peerId)socket.emit('skip');closePeer();queued=false;if(localStream)localStream.getTracks().forEach(t=>t.stop());localStream=null;$('localVideo').srcObject=null;registered=false;$('registerBtn').disabled=false;$('callBtn').disabled=true;$('nextBtn').disabled=true;$('prevBtn').disabled=true;$('cameraBtn').disabled=true;placeholders();status('تماس پایان یافت. برای شروع دوباره ثبت‌نام کن.')}
+ async function onSignal({from,data}){if(!data)return;if(data.description){if(!pc){peerId=from;makePC()}await pc.setRemoteDescription(data.description);if(data.description.type==='offer'){const a=await pc.createAnswer();await pc.setLocalDescription(a);signal({description:pc.localDescription})}}else if(data.candidate&&pc){try{await pc.addIceCandidate(data.candidate)}catch{}}}
+ socket.on('connect',()=>{if(queued)status('متصل شدیم؛ در حال جست‌وجو…')});socket.on('waiting',()=>{queued=true;$('callBtn').disabled=false;$('nextBtn').disabled=false;status('فعلاً کسی پیدا نشد؛ منتظر بمان یا «بعدی» را بزن.')});socket.on('matched',async info=>{queued=false;if(pc){pc.close();pc=null}$('remoteVideo').srcObject=null;peerId=info.peerId;history=history.slice(0,historyIndex+1);history.push(info.peerId);historyIndex=history.length-1;status('کاربر پیدا شد؛ در حال برقراری تماس تصویری…');makePC();if(info.initiator){const offer=await pc.createOffer();await pc.setLocalDescription(offer);signal({description:pc.localDescription})}active=true;$('callBtn').disabled=true;$('prevBtn').disabled=historyIndex<=0;$('nextBtn').disabled=false;placeholders()});socket.on('signal',async msg=>{try{if(!peerId)peerId=msg.from;await onSignal(msg);if(pc&&pc.connectionState!=='new')status('تماس برقرار است.')}catch(e){status('اتصال برقرار نشد؛ «بعدی» را امتحان کن.')}});socket.on('partner-left',()=>{closePeer();if(registered){queued=false;$('callBtn').disabled=false;$('nextBtn').disabled=false;status('طرف مقابل خارج شد؛ برای فرد جدید «بعدی» را بزن.')}});socket.on('previous-invite',({from})=>{const accept=confirm('کاربر قبلی می‌خواهد دوباره با شما تماس بگیرد. قبول می‌کنی؟');socket.emit('previous-response',{from,accept})});socket.on('previous-pending',()=>status('درخواست بازگشت برای نفر قبلی فرستاده شد؛ منتظر پاسخ او هستیم.'));socket.on('previous-unavailable',()=>status('نفر قبلی آنلاین یا آزاد نیست، یا درخواست را نپذیرفت.'));socket.on('admin-removed',()=>{stopAll();status('دسترسی این نشست توسط مدیر قطع شد.')});
+ $('registerBtn').addEventListener('click',register);$('callBtn').addEventListener('click',findPartner);$('cameraBtn').addEventListener('click',switchCamera);$('nextBtn').addEventListener('click',()=>{if(!registered){status('اول ثبت‌نام کن.');return}findPartner()});$('prevBtn').addEventListener('click',()=>{if(historyIndex<=0){status('هنوز نفر قبلی‌ای برای بازگشت وجود ندارد.');return}const targetId=history[historyIndex-1];if(peerId)socket.emit('skip');closePeer();socket.emit('previous-request',{targetId});});
+ socket.on('disconnect',()=>{if(registered)status('اتصال به سرور قطع شد؛ دوباره تلاش کن.')});window.addEventListener('beforeunload',()=>{if(localStream)localStream.getTracks().forEach(t=>t.stop());if(pc)pc.close()});
+})();
+</script></body></html>
