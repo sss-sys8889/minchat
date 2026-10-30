@@ -2,6 +2,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+const database = require("./database");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,7 +16,10 @@ const io = new Server(server, {
 app.disable("x-powered-by");
 app.use(express.json({ limit: "20kb" }));
 app.use(express.static("public", { etag: true, maxAge: "1h" }));
-app.get("/health", (_req, res) => res.json({ ok: true, app: "Minchat", version: "1.0.0" }));
+app.get("/health", async (_req, res) => {
+  const db = await database.status();
+  res.json({ ok: true, app: "Minchat", version: "1.0.0", database: db });
+});
 // Optional TURN support: configure TURN_URL, TURN_USERNAME and TURN_CREDENTIAL on the host.
 // Credentials are delivered only to connected clients; use short-lived TURN credentials in production.
 app.get("/ice-config", (_req, res) => {
@@ -56,7 +60,17 @@ app.get("/admin/api/users", adminOnly, (_req, res) => {
   res.set("Cache-Control", "no-store");
   res.json({ users: [...sessions.entries()].map(([id, u]) => ({ id, ...u, waiting: waiting.has(id), inCall: partner.has(id) })) });
 });
-app.post("/admin/api/users/:id/remove", adminOnly, (req, res) => {
+app.get("/admin/api/logs", adminOnly, async (_req, res) => {
+  try {
+    const logs = await database.getRecentLogs(50);
+    res.set("Cache-Control", "no-store");
+    res.json({ ok: true, ...logs });
+  } catch (err) {
+    console.error("[admin] log retrieval failed:", err.message);
+    res.status(503).json({ error: "خواندن گزارش‌ها ممکن نشد." });
+  }
+});
+app.post("/admin/api/users/:id/remove", adminOnly, async (req, res) => {
   const id = req.params.id;
   const target = io.sockets.sockets.get(id);
   if (!target) {
@@ -66,6 +80,8 @@ app.post("/admin/api/users/:id/remove", adminOnly, (req, res) => {
   }
   endPair(id);
   sessions.delete(id);
+  try { await database.recordAdminAction("remove_session", id); }
+  catch (err) { console.error("[database] admin action save failed:", err.message); }
   target.emit("admin-removed", { message: "مدیر دسترسی این نشست را قطع کرد." });
   target.disconnect(true);
   console.log(`[admin] removed online session ${id}`);
@@ -179,7 +195,7 @@ io.on("connection", (socket) => {
     socket.emit("matched", { initiator: false, peerId: from, partnerCountry: sessions.get(from)?.country || "—" });
   });
 
-  socket.on("report", ({ reason } = {}) => {
+  socket.on("report", async ({ reason } = {}) => {
     const now = Date.now();
     const last = reports.get(socket.id) || 0;
     if (now - last < 10000) return;
@@ -187,6 +203,8 @@ io.on("connection", (socket) => {
     const otherId = partner.get(socket.id);
     // MVP behavior: disconnect the pair and log only a generic event, not media or chat.
     console.log(`[moderation] report received; reporter=${socket.id}; reason=${String(reason || "unspecified").slice(0, 40)}`);
+    try { await database.recordReport(socket.id, otherId, reason); }
+    catch (err) { console.error("[database] report save failed:", err.message); }
     endPair(socket.id);
     socket.emit("report-received");
     if (otherId) io.to(otherId).emit("partner-left");
@@ -205,4 +223,12 @@ io.on("connection", (socket) => {
 });
 
 const port = Number(process.env.PORT || 3000);
-server.listen(port, "0.0.0.0", () => console.log(`Minchat listening on port ${port}`));
+(async () => {
+  if (process.env.DATABASE_URL) {
+    try { await database.initialize(); }
+    catch (err) { console.error("[database] PostgreSQL initialization failed:", err.message); }
+  } else {
+    console.warn("[database] DATABASE_URL is not set; persistent moderation logs are disabled.");
+  }
+  server.listen(port, "0.0.0.0", () => console.log(`Minchat listening on port ${port}`));
+})();
